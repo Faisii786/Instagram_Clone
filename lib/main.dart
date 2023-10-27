@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:instagram_clone/screens/add_post.dart';
+import 'package:instagram_clone/screens/comment_screen.dart';
 import 'package:instagram_clone/screens/favourite_screen.dart';
 import 'package:instagram_clone/screens/home%20screens/home_screen.dart';
 import 'package:instagram_clone/screens/home%20screens/nav_home.dart';
@@ -53,6 +54,7 @@ class MyApp extends StatelessWidget {
           GetPage(name: '/SelectImage', page: () => const SelectImage()),
           GetPage(name: '/Favourite', page: () => const FavScreen()),
           GetPage(name: '/profile', page: () => const ProfileScreen()),
+          GetPage(name: '/comment', page: () => const CommentScreen()),
         ],
       ),
     );

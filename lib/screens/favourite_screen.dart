@@ -5,9 +5,14 @@ class FavScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold(
-      appBar: AppBar(
-        title: const Text("Favourite Screen"),
+    return const SafeArea(
+        child: Scaffold(
+      body: Center(
+        child: Icon(
+          Icons.favorite,
+          size: 50,
+          color: Colors.red,
+        ),
       ),
     ));
   }

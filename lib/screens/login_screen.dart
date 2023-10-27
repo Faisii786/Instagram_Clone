@@ -29,13 +29,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // method for login
   void loginUser() {
+    String email = emailController.text.trim().toLowerCase();
     setState(() {
       loading = true;
     });
     AuthMethods()
-        .userlogin(email: emailController.text, password: passController.text);
-    emailController.clear();
-    passController.clear();
+        .userlogin(email: email, password: passController.text);
   }
 
   @override

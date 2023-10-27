@@ -52,12 +52,13 @@ class _SignInScreenState extends State<SignInScreen> {
 
   // user registration
   void userRegistration() {
+    String email = nameController.text.trim().toLowerCase();
     setState(() {
       loading = true;
     });
     AuthMethods().signUpUser(
       name: nameController.text,
-      email: emailController.text,
+      email: email,
       password: passController.text,
       bio: bioController.text,
       profilePhoto: profileImage!,

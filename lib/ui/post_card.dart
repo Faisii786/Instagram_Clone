@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:instagram_clone/screens/comment_screen.dart';
 import 'package:instagram_clone/utills/colors.dart';
 import 'package:intl/intl.dart';
 
@@ -11,6 +13,8 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
+  bool fav = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,7 +31,7 @@ class _PostCardState extends State<PostCard> {
                 radius: 20,
                 backgroundColor: greyColor,
                 backgroundImage: NetworkImage(
-                  widget.snap['postProfile'],
+                  widget.snap['postProfile'] ?? "",
                 ),
               ),
               const SizedBox(
@@ -61,14 +65,34 @@ class _PostCardState extends State<PostCard> {
           ),
           Row(
             children: [
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.favorite,
-                    color: Colors.red,
-                  )),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.comment)),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.send)),
+              const SizedBox(
+                width: 10,
+              ),
+              GestureDetector(
+                  onTap: () {
+                    fav = true;
+                    setState(() {});
+                  },
+                  child: fav
+                      ? const Icon(
+                          Icons.favorite,
+                          color: Colors.red,
+                        )
+                      : const Icon(
+                          Icons.favorite_outline_outlined,
+                        )),
+              const SizedBox(
+                width: 30,
+              ),
+              GestureDetector(
+                  onTap: () {
+                    Get.to(() => const CommentScreen());
+                  },
+                  child: const Icon(Icons.comment)),
+              const SizedBox(
+                width: 30,
+              ),
+              GestureDetector(onTap: () {}, child: const Icon(Icons.send)),
               Flexible(
                 flex: 2,
                 child: Container(),
