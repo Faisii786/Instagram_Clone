@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:instagram_clone/Firebase_Auth/authentication_methods.dart';
+import 'package:instagram_clone/screens/home%20screens/home_screen.dart';
 import 'package:instagram_clone/screens/sign_up_screen.dart';
 import 'package:instagram_clone/ui/button.dart';
+import 'package:instagram_clone/ui/snackbar.dart';
 import 'package:instagram_clone/ui/text_field.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -28,13 +31,57 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   // method for login
-  void loginUser() {
+  Future loginUser() async {
     String email = emailController.text.trim().toLowerCase();
+    String password = passController.text;
+
+    if (email.isEmpty) {
+      showSnackbar("Email cannot be empty");
+      return;
+    } else if (password.isEmpty) {
+      showSnackbar("Password cannot be empty");
+      return;
+    } else if (password.length < 6) {
+      showSnackbar("Password must be at least 6 characters long");
+      return;
+    }
+
+    try {
+      setState(() {
+        loading = true;
+      });
+      User? user =
+          await AuthMethods().userlogin(email: email, password: password);
+
+      if (user != null) {
+        Get.to(
+          () => const HomeScreen(),
+          transition: Transition.fade,
+          duration: const Duration(seconds: 1),
+        );
+      } else {
+        showSnackbar("An error occurred. Please check your credentials.");
+        setState(() {
+          loading = false;
+        });
+      }
+    } on FirebaseAuthException catch (ex) {
+      showSnackbar(ex.toString());
+      setState(() {
+        loading = false;
+      });
+
+      showSnackbar(ex.toString());
+    } catch (e) {
+      showSnackbar("An error occurred: $e");
+      setState(() {
+        loading = false;
+      });
+    }
+
     setState(() {
-      loading = true;
+      loading = false;
     });
-    AuthMethods()
-        .userlogin(email: email, password: passController.text);
   }
 
   @override

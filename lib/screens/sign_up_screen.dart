@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -6,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:instagram_clone/Firebase_Auth/authentication_methods.dart';
 import 'package:instagram_clone/screens/login_screen.dart';
 import 'package:instagram_clone/ui/button.dart';
+import 'package:instagram_clone/ui/snackbar.dart';
 import 'package:instagram_clone/ui/text_field.dart';
 import 'package:instagram_clone/utills/image_picker.dart';
 
@@ -51,18 +53,68 @@ class _SignInScreenState extends State<SignInScreen> {
   // end
 
   // user registration
-  void userRegistration() {
-    String email = nameController.text.trim().toLowerCase();
+
+  void userRegistration() async {
+    String name = nameController.text.trim();
+    String email = emailController.text.trim().toLowerCase();
+    String password = passController.text;
+    String bio = bioController.text;
+
+    if (name.isEmpty) {
+      showSnackbar("Name cannot be empty");
+      return;
+    } else if (name.contains(RegExp(r'\d'))) {
+      showSnackbar("Name cannot contain numbers");
+      return;
+    } else if (email.isEmpty) {
+      showSnackbar("Email cannot be empty");
+      return;
+    } else if (password.isEmpty) {
+      showSnackbar("Password cannot be empty");
+      return;
+    } else if (password.length < 6) {
+      showSnackbar("Password must be at least 6 characters long");
+      return;
+    } else if (bio.isEmpty) {
+      showSnackbar("Bio cannot be empty");
+      return;
+    } else if (bio.contains(RegExp(r'\d'))) {
+      showSnackbar("Bio cannot contain numbers");
+      return;
+    }
+
+    try {
+      setState(() {
+        loading = true;
+      });
+      await AuthMethods().signUpUser(
+        name: name,
+        email: email,
+        password: password,
+        bio: bio,
+        profilePhoto: profileImage!,
+      );
+
+      Get.to(
+        () => const LoginScreen(),
+        transition: Transition.fade,
+        duration: const Duration(seconds: 1),
+      );
+    } on FirebaseAuthException catch (ex) {
+      showSnackbar(ex.toString());
+      setState(() {
+        loading = false;
+      });
+    } catch (e) {
+      showSnackbar("An error occurred: $e");
+      setState(() {
+        loading = false;
+      });
+    }
+
     setState(() {
-      loading = true;
+      loading = false;
     });
-    AuthMethods().signUpUser(
-      name: nameController.text,
-      email: email,
-      password: passController.text,
-      bio: bioController.text,
-      profilePhoto: profileImage!,
-    );
   }
 
   @override
